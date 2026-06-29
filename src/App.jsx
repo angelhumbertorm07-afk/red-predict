@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
+import StatsBar from './components/StatsBar';
 import partidosPasados from './data/partidosPasados';
 
 function App() {
@@ -15,7 +16,7 @@ function App() {
 
   useEffect(() => {
     setCargando(true);
-    fetch('http://192.168.1.10:5000/api/predicciones')
+    fetch('http://127.0.0.1:5000/api/predicciones')
       .then((res) => res.json())
       .then((data) => { setDatos(data); setCargando(false); })
       .catch((err) => { console.error("Error conectando a la API:", err); setCargando(false); });
@@ -110,6 +111,7 @@ function App() {
           <button className={`filtro-btn ${ligaFiltro === "champions" ? "active" : ""}`} onClick={() => setLigaFiltro("champions")}>🇪🇺</button>
         </div>
       </header>
+      <StatsBar partidos={partidosPasados} />
 
       <main className="partidos-grid">
         {cargando && <p className="no-results">Sincronizando relojes y datos de la IA...</p>}

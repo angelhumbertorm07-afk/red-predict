@@ -827,4 +827,97 @@ header {
 
 .buscador-input::placeholder {
   color: #71717a;
+}/* ==========================================================================
+   BARRA DE ESTADÍSTICAS
+   ========================================================================== */
+
+.stats-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 1300px;
+  margin: 14px auto 0 auto;
+  background-color: #0c080a;
+  border: 1px solid #3d282e;
+  border-radius: 12px;
+  padding: 10px 20px;
+  flex-wrap: wrap;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.stat-icon {
+  font-size: 1.1rem;
+}
+
+.stat-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-valor {
+  font-size: 1.1rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 0.65rem;
+  color: #71717a;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-divider {
+  width: 1px;
+  height: 30px;
+  background-color: #3d282e;
+  flex-shrink: 0;
+}
+
+.stat-barra-container {
+  flex: 1;
+  min-width: 120px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-left: 8px;
+}
+
+.stat-barra-bg {
+  height: 6px;
+  background-color: #2a2225;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.stat-barra-fill {
+  height: 100%;
+  border-radius: 10px;
+  transition: width 0.5s ease;
+}
+
+.stat-total {
+  font-size: 0.65rem;
+  color: #71717a;
+  text-align: right;
+}
+
+@media (max-width: 600px) {
+  .stats-bar {
+    gap: 12px;
+    padding: 10px 14px;
+  }
+  .stat-barra-container {
+    width: 100%;
+    margin-left: 0;
+  }
+  .stat-divider {
+    display: none;
+  }
 }
