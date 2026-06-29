@@ -1,3 +1,4 @@
+import partidosPasados, { partidosActuales } from './data/partidosPasados';
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import StatsBar from './components/StatsBar';
@@ -41,7 +42,7 @@ function App() {
     );
   };
 
-  const poolPartidos = pestaña === "actual" ? datos : partidosPasados;
+  const poolPartidos = pestaña === "actual" ? partidosActuales : partidosPasados;
 
   const partidosFiltrados = poolPartidos.filter((item) => {
     const coincideBusqueda = item.partido.toLowerCase().includes(busqueda.toLowerCase());
