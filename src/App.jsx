@@ -15,12 +15,25 @@ function App() {
   const [buscadorEnFoco, setBuscadorEnFoco] = useState(false);
 
   useEffect(() => {
-    setCargando(true);
-    fetch('https://exquisite-youth-production.up.railway.app/api/predicciones')
-      .then((res) => res.json())
-      .then((data) => { setDatos(data); setCargando(false); })
-      .catch((err) => { console.error("Error conectando a la API:", err); setCargando(false); });
-  }, []);
+  setCargando(true);
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 10000);
+
+  fetch('https://exquisite-youth-production.up.railway.app/api/predicciones', {
+    signal: controller.signal
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      clearTimeout(timeoutId);
+      setDatos(data);
+      setCargando(false);
+    })
+    .catch((err) => {
+      clearTimeout(timeoutId);
+      console.error("Error conectando a la API:", err);
+      setCargando(false);
+    });
+}, []);
 
   const toggleNotificacion = (id) => {
     setNotificaciones(prev =>
