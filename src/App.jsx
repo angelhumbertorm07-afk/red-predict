@@ -1,40 +1,16 @@
-import partidosPasados, { partidosActuales } from './data/partidosPasados';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import StatsBar from './components/StatsBar';
-import partidosPasados from './data/partidosPasados';
+import partidosPasados, { partidosActuales } from './data/partidosPasados';
 
 function App() {
   const [pantallaActual, setPantallaActual] = useState("inicio");
-  const [datos, setDatos] = useState([]);
-  const [cargando, setCargando] = useState(true);
   const [busqueda, setBusqueda] = useState("");
   const [pestaña, setPestaña] = useState("actual");
   const [ligaFiltro, setLigaFiltro] = useState("todos");
   const [soloValor, setSoloValor] = useState(false);
   const [notificaciones, setNotificaciones] = useState([]);
   const [buscadorEnFoco, setBuscadorEnFoco] = useState(false);
-
-  useEffect(() => {
-  setCargando(true);
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 10000);
-
-  fetch('https://exquisite-youth-production.up.railway.app/api/predicciones', {
-    signal: controller.signal
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      clearTimeout(timeoutId);
-      setDatos(data);
-      setCargando(false);
-    })
-    .catch((err) => {
-      clearTimeout(timeoutId);
-      console.error("Error conectando a la API:", err);
-      setCargando(false);
-    });
-}, []);
 
   const toggleNotificacion = (id) => {
     setNotificaciones(prev =>
@@ -51,7 +27,6 @@ function App() {
     return coincideBusqueda && coincideLiga && coincideValor;
   });
 
-  /* ── PANTALLA LANDING ─────────────────────────────────────────── */
   if (pantallaActual === "inicio") {
     return (
       <div className="landing-container">
@@ -75,7 +50,6 @@ function App() {
     );
   }
 
-  /* ── PANTALLA APP ─────────────────────────────────────────────── */
   return (
     <div>
       <header>
@@ -98,7 +72,6 @@ function App() {
               }}
             />
           </div>
-
           <button
             className={`filtro-btn ${soloValor ? 'filtro-valor-activo' : ''}`}
             onClick={() => setSoloValor(!soloValor)}
@@ -125,21 +98,19 @@ function App() {
           <button className={`filtro-btn ${ligaFiltro === "champions" ? "active" : ""}`} onClick={() => setLigaFiltro("champions")}>🇪🇺</button>
         </div>
       </header>
+
       <StatsBar partidos={partidosPasados} />
 
       <main className="partidos-grid">
-        {cargando && <p className="no-results">Sincronizando relojes y datos de la IA...</p>}
-
-        {!cargando && partidosFiltrados.length === 0 && (
+        {partidosFiltrados.length === 0 && (
           <p className="no-results">Sin partidos activos.</p>
         )}
 
-        {!cargando && partidosFiltrados.map((p) => (
+        {partidosFiltrados.map((p) => (
           <div
             key={p.id}
             className={`partido-card-sportsbook${p.proximamente ? ' card-proximamente' : ''}`}
           >
-            {/* ── HEADER DE TARJETA ── */}
             <div className="card-header">
               <div className="card-header-left">
                 <span className="liga-tag">
@@ -169,7 +140,6 @@ function App() {
               )}
             </div>
 
-            {/* ── CUERPO DE TARJETA ── */}
             {p.proximamente ? (
               <>
                 <h3>{p.partido}</h3>
@@ -183,14 +153,11 @@ function App() {
                 {p.esValor && (
                   <span className="value-badge">💎 VALOR {p.cuotaMercado ? `(${p.cuotaMercado})` : ''}</span>
                 )}
-
                 <h3>{p.partido}</h3>
-
                 <div className="confianza-ia-container">
                   <span className="confianza-label">Confianza:</span>
                   <span className="confianza-estrellas">{"⭐".repeat(p.confianzaIA || 4)}</span>
                 </div>
-
                 <div className="radar-rachas">
                   <div className="racha-equipo">
                     <span>{p.local.substring(0, 3).toUpperCase()}:</span>
@@ -201,7 +168,6 @@ function App() {
                     <div>{p.rachaVisita?.join(" ")}</div>
                   </div>
                 </div>
-
                 {pestaña === "pasado" && (
                   <div
                     className="marcador-final-box"
@@ -213,7 +179,6 @@ function App() {
                     </span>
                   </div>
                 )}
-
                 <div className="cuotas-container">
                   <div className="cuota-box">
                     <span className="cuota-label">Local</span>
@@ -228,7 +193,6 @@ function App() {
                     <span className="cuota-valor">{p.gana_visitante}%</span>
                   </div>
                 </div>
-
                 <div className="marcadores-compactos">
                   <h4>Top Marcador Probable</h4>
                   {p.top_marcadores?.map((m, idx) => (
