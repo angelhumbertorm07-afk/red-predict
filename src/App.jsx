@@ -16,7 +16,7 @@ function App() {
 
   useEffect(() => {
     setCargando(true);
-    fetch('http://127.0.0.1:5000/api/predicciones')
+    fetch('https://exquisite-youth-production.up.railway.app/api/predicciones')
       .then((res) => res.json())
       .then((data) => { setDatos(data); setCargando(false); })
       .catch((err) => { console.error("Error conectando a la API:", err); setCargando(false); });
