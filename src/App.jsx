@@ -18,7 +18,22 @@ function App() {
     );
   };
 
-  const poolPartidos = pestaña === "actual" ? partidosActuales : partidosPasados;
+  // Detección automática por fecha
+  const hoy = new Date();
+  hoy.setHours(0, 0, 0, 0);
+
+  const partidosActualesFiltrados = partidosActuales.filter(
+    p => !p.fechaISO || new Date(p.fechaISO) >= hoy
+  );
+
+  const partidosDieciseisavosJugados = partidosActuales.filter(
+    p => p.fechaISO && new Date(p.fechaISO) < hoy && !p.proximamente
+  );
+
+  const todosLosPasados = [...partidosPasados, ...partidosDieciseisavosJugados];
+  const todosLosPasadosConResultado = todosLosPasados.filter(p => p.resultado);
+
+  const poolPartidos = pestaña === "actual" ? partidosActualesFiltrados : todosLosPasados;
 
   const partidosFiltrados = poolPartidos.filter((item) => {
     const coincideBusqueda = item.partido.toLowerCase().includes(busqueda.toLowerCase());
@@ -88,7 +103,7 @@ function App() {
           <button
             className={`tab-btn ${pestaña === "actual" ? "active" : ""}`}
             onClick={() => { setPestaña("actual"); setLigaFiltro("todos"); }}
-          >📅 Dieciseisavos</button>
+          >📅 Próximos</button>
         </div>
 
         <div className="filtros-region">
@@ -99,7 +114,7 @@ function App() {
         </div>
       </header>
 
-      <StatsBar partidos={partidosPasados} />
+      <StatsBar partidos={todosLosPasadosConResultado} />
 
       <main className="partidos-grid">
         {partidosFiltrados.length === 0 && (
@@ -168,7 +183,8 @@ function App() {
                     <div>{p.rachaVisita?.join(" ")}</div>
                   </div>
                 </div>
-                {pestaña === "pasado" && (
+
+                {p.resultado && (
                   <div
                     className="marcador-final-box"
                     style={{ borderColor: p.acierto ? '#00c853' : '#d50000' }}
@@ -179,6 +195,7 @@ function App() {
                     </span>
                   </div>
                 )}
+
                 <div className="cuotas-container">
                   <div className="cuota-box">
                     <span className="cuota-label">Local</span>
